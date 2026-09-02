@@ -57,7 +57,6 @@ img{display:block;max-width:100%}
 h2,h3,.h-sec,.manifest p{text-wrap:balance}
 .origin p,.shaft-head p,.card-text > p,.step p,.cell p,.seq-sticky p,.fgrid p{text-wrap:pretty}
 .stat b,.card-price,.entry-price{font-variant-numeric:tabular-nums}
-.f-cols a,.f-legal{overflow-wrap:break-word}
 .mono{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;
   text-transform:uppercase;color:var(--dim)}
 .wrap{max-width:1560px;margin:0 auto;padding-inline:var(--pad)}
@@ -91,14 +90,17 @@ h2,h3,.h-sec,.manifest p{text-wrap:balance}
 .nav > *{pointer-events:auto}
 .nav-left,.nav-right{display:flex;align-items:center;gap:10px}
 .brand{display:flex;align-items:center;gap:10px}
-.brand-mark{width:26px;height:26px;flex:0 0 auto}
-.brand-text{font-weight:900;letter-spacing:-.02em;font-size:16px;text-transform:uppercase;display:none}
+/* The supplied lockup carries the wordmark, so the separate mark and text are
+   gone. 36px keeps the bar unchanged: the Menu pill is 44px and stays the
+   tallest thing in it. The lockup is inlined rather than linked, so a page
+   opened on its own still shows it. */
+.brand-logo{height:36px;width:auto;aspect-ratio:538/134;display:block;flex:0 0 auto}
+@media(max-width:420px){.brand-logo{height:30px}}
 .nav-right .pill-label{display:none}
 .nav-right{gap:8px}
 @media(max-width:760px){.nav-right .btn-line{display:none}}
 @media(min-width:768px){
   .nav{padding:24px 32px}
-  .brand-text{display:block}
   .nav-right .pill-label{display:block}
   .dot-btn{width:34px;height:34px}
 }
@@ -166,8 +168,13 @@ body.ov-open .nav-right{opacity:0;pointer-events:none}
    the left edge jumped by 180px at 1920 and 500px at 2560. */
 .hero-foot{position:relative;z-index:30;width:100%;max-width:1560px;margin-inline:auto;
   padding:clamp(28px,6vh,72px) var(--pad) clamp(24px,5vh,56px);
-  background:linear-gradient(to top,var(--ink) 0%,rgba(10,10,11,.82) 50%,transparent 100%);
   display:flex;flex-direction:column;gap:28px}
+/* The copy is capped to the page column; the gradient under it is not. Painting
+   it on the capped box left it stopping at the column edges on wide screens,
+   which read as a panel behind the headline. */
+.hero-foot::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:100vw;
+  transform:translateX(-50%);z-index:-1;pointer-events:none;
+  background:linear-gradient(to top,var(--ink) 0%,rgba(10,10,11,.82) 50%,transparent 100%)}
 .hero-sub{display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(232,230,225,.55)}
 .hero-sub i{width:8px;height:8px;border-radius:999px;background:var(--signal);flex:0 0 auto}
 .hero h1{margin-top:18px;font-size:clamp(1.4rem,7.2vw,4.2rem);letter-spacing:-.03em;
@@ -283,83 +290,23 @@ body.ov-open .nav-right{opacity:0;pointer-events:none}
 .closer .hero-cta{margin-top:40px}
 
 
-/* ---------- footer ---------- */
-footer{border-top:1px solid var(--line);padding:clamp(52px,8vh,96px) 0 40px;
-  color:var(--dim);font-size:14.5px}
-/* One centred column: wordmark, the statement at display size, the standing
-   line, then the single thing to do. Side by side, the statement and the form
-   read as two separate offers. */
-.f-top{display:flex;flex-direction:column;align-items:center;text-align:center;
-  gap:clamp(24px,4vh,42px);padding-block:clamp(28px,6vh,70px) clamp(8px,2vh,22px)}
-.f-lead{display:flex;flex-direction:column;align-items:center}
-.f-mark{display:flex;align-items:center;justify-content:center;gap:11px;color:var(--paper)}
-.f-mark svg{width:26px;height:26px;flex:0 0 auto}
-.f-mark span{font-weight:900;letter-spacing:-.025em;font-size:19px;text-transform:uppercase}
-/* width:100%: as a child of a centred flex column this block otherwise
-   shrinks to fit, and its lines wrap where they should not. */
-.f-say{width:100%;margin-top:clamp(22px,3.4vh,38px);max-width:none}
-.f-say b,.f-say span{text-wrap:balance}
-/* The statement carries the block: display size, one sentence per line, the
-   second in the accent. */
-.f-say b{display:block;font-weight:900;text-transform:uppercase;color:var(--paper);
-  font-size:clamp(30px,5vw,66px);line-height:.94;letter-spacing:-.04em}
-.f-say span{display:block;font-weight:900;text-transform:uppercase;color:var(--signal);
-  font-size:clamp(30px,5vw,66px);line-height:.94;letter-spacing:-.04em}
-
-/* No panel: on a centred block a bordered card reads as a second surface. */
-.f-card{width:100%;max-width:560px;text-align:center}
-.f-card > p{margin-inline:auto;max-width:46ch}
-.f-card > p{margin-top:8px;font-size:14.5px;max-width:38ch}
-.f-field{margin-top:22px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
-.f-field input{flex:1 1 240px}
-.f-field .f-note{flex:1 0 100%}
-@media(max-width:520px){.f-field{flex-direction:column}}
-.f-field input{width:100%;min-height:52px;padding:14px 16px;border-radius:10px;
-  border:1px solid var(--line);background:var(--ink);color:var(--paper);
-  font-family:inherit;font-size:16px}
-.f-field input::placeholder{color:var(--dim)}
-.f-field input:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
-.f-send{min-height:52px;border-radius:999px;border:1px solid transparent;
-  padding-inline:26px;background:var(--signal);color:#0A0A0B;font-family:inherit;
-  font-size:14.5px;font-weight:700;cursor:pointer;transition:background .25s,color .25s}
-.f-send:hover{background:var(--paper);color:var(--ink)}
-.f-note{min-height:18px;font-size:12.5px;text-align:center}
-
-.f-rule{border:0;height:1px;background:var(--line);margin:clamp(40px,6vh,72px) 0}
-.f-cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(24px,3vw,48px)}
-.f-cols h3{color:var(--paper);font-size:15.5px;font-weight:600;letter-spacing:-.01em;margin-bottom:22px}
-.f-cols ul{list-style:none;display:grid;gap:15px}
-.f-cols a{display:inline-flex;align-items:center;gap:9px;transition:color .22s}
-.f-cols a:hover{color:var(--paper)}
-.f-chip{border:1px solid var(--line);border-radius:999px;padding:3px 9px;font-size:11px;
-  letter-spacing:.06em;color:var(--paper)}
-
-.f-bottom{display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap}
-.f-contact{display:flex}
-.f-mail{display:inline-flex;align-items:center;gap:14px;border:1px solid var(--line);
-  padding:12px 18px 12px 12px;transition:border-color .22s ease,background .22s ease}
-.f-mail:hover{border-color:var(--paper);background:var(--soft)}
-.f-mail-icon{width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;
-  border:1px solid var(--line);color:var(--dim)}
-.f-mail:hover .f-mail-icon{color:var(--paper)}
-.f-mail svg{width:18px;height:18px}
-.f-mail b{display:block;color:var(--paper);font-weight:700;font-size:14px;margin-bottom:2px}
-.f-mail span{font-size:13px}
-.f-facts{display:flex;gap:clamp(20px,3vw,44px);flex-wrap:wrap}
-.f-fact{display:flex;align-items:center;gap:11px;font-size:12.5px;line-height:1.25;
-  text-transform:uppercase;letter-spacing:.08em}
-.f-fact svg{width:26px;height:26px;flex:0 0 auto;color:var(--dim)}
-.f-fact b{display:block;font-weight:600;color:var(--paper)}
-.f-legal{margin-top:clamp(28px,4vh,48px);font-size:12.5px;overflow-wrap:break-word}
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
-  clip:rect(0 0 0 0);white-space:nowrap;border:0}
-
-@media(max-width:900px){
-  .f-top{grid-template-columns:1fr}
-  .f-cols{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px}
-  }
-@media(max-width:560px){.f-cols{grid-template-columns:1fr}}
-
+/* ---------- footer ----------
+   One row: the lockup and the main menu. One rule. One line of legal text with
+   its two links. Everything the footer used to repeat from the pages is gone. */
+footer{border-top:1px solid var(--line);padding:clamp(40px,6vh,72px) 0 clamp(28px,4vh,44px)}
+.f-row{display:flex;align-items:center;justify-content:space-between;gap:clamp(20px,4vw,48px);flex-wrap:wrap}
+.f-brand{display:block}
+.f-logo{height:clamp(30px,2.6vw,38px);width:auto;aspect-ratio:538/134;display:block}
+.f-menu{display:flex;flex-wrap:wrap;gap:clamp(14px,2.2vw,32px)}
+.f-menu a,.f-legal nav a{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);transition:color .2s ease}
+.f-menu a:hover,.f-legal nav a:hover{color:var(--paper)}
+.f-rule{border:0;border-top:1px solid var(--line);margin:clamp(28px,4vh,44px) 0 clamp(18px,3vh,28px)}
+.f-legal{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap}
+.f-legal p{margin:0;font-size:12.5px;color:var(--dim);max-width:70ch}
+.f-legal nav{display:flex;gap:clamp(14px,2vw,28px)}
+@media(max-width:700px){.f-row{align-items:flex-start;flex-direction:column}
+  .f-legal{flex-direction:column;align-items:flex-start}}
 
 /* ---------- motion layer ---------- */
 .sw{display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:.12em;margin-bottom:-.12em}
@@ -797,13 +744,22 @@ footer{border-top:1px solid var(--line);padding:clamp(52px,8vh,96px) 0 40px;
 <nav class="nav" id="nav">
   <div class="nav-left">
     <a class="brand" href="index.html" aria-label="Vault Network, home">
-      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
-        <g transform="rotate(-35 13 13)" fill="currentColor">
-          <rect x="3.5" y="6.5" width="19" height="5.5" rx="2.75"/>
-          <rect x="3.5" y="14" width="19" height="5.5" rx="2.75"/>
-        </g>
+      <svg class="brand-logo" viewBox="0 0 538 134" fill="none" aria-hidden="true">
+        <path d="M46.5369 130.084C40.4491 130.084 34.5369 129.146 28.8002 127.27C23.1807 125.276 18.205 122.109 13.8733 117.77C11.1806 114.955 8.78053 111.671 6.6732 107.918C4.56587 104.048 2.92685 98.8876 1.75611 92.4371C0.585368 85.8693 0 77.1905 0 66.4006C0 55.6107 0.585368 46.9905 1.75611 40.5401C2.92685 33.9723 4.56587 28.7533 6.6732 24.883C8.78053 21.0127 11.1806 17.7288 13.8733 15.0313C18.205 10.6919 23.1807 7.58397 28.8002 5.70747C34.5369 3.71369 40.4491 2.7168 46.5369 2.7168C46.584 2.7168 85.4277 2.71686 85.4747 2.71698C91.5119 2.73227 97.3186 3.7291 102.895 5.70747C108.631 7.58397 113.666 10.6919 117.997 15.0313C120.807 17.7288 123.207 21.0127 125.197 24.883C127.305 28.7533 128.944 33.9723 130.114 40.5401C131.285 46.9905 131.871 55.6107 131.871 66.4006C131.871 77.1905 131.285 85.8693 130.114 92.4371C128.944 98.8876 127.305 104.048 125.197 107.918C123.207 111.671 120.807 114.955 117.997 117.77C113.666 122.109 108.631 125.276 102.895 127.27C97.3376 129.125 91.5514 130.064 85.5363 130.084C85.4688 130.084 46.6045 130.084 46.5369 130.084Z" fill="#FD480D"/>
+        <path d="M85.4746 2.71191C91.5118 2.7272 97.3184 3.72381 102.895 5.70215C108.631 7.57866 113.665 10.687 117.997 15.0264C120.807 17.7238 123.207 21.0077 125.197 24.8779C127.304 28.7481 128.944 33.9668 130.114 40.5342C131.285 46.9847 131.87 55.6056 131.87 66.3955C131.87 77.1852 131.285 85.8639 130.114 92.4316C128.944 98.8821 127.305 104.043 125.197 107.913C123.207 111.666 120.807 114.95 117.997 117.765C113.665 122.104 108.631 125.271 102.895 127.265C97.3375 129.12 91.5511 130.058 85.5361 130.079C85.4225 130.079 46.6584 130.079 46.5371 130.079C40.4493 130.079 34.5364 129.141 28.7998 127.265C23.1804 125.271 18.2047 122.104 13.873 117.765C11.1804 114.95 8.78017 111.666 6.67285 107.913C4.56552 104.043 2.9266 98.8821 1.75586 92.4316C0.585136 85.864 1.21693e-05 77.1852 0 66.3955C0 55.6056 0.585119 46.9847 1.75586 40.5342C2.92655 33.9668 4.56568 28.7481 6.67285 24.8779C8.78009 21.0078 11.1805 17.7238 13.873 15.0264C18.2047 10.6871 23.1804 7.57867 28.7998 5.70215C34.5364 3.70837 40.4493 2.71094 46.5371 2.71094C46.6483 2.71094 85.3873 2.7118 85.4746 2.71191ZM38.0615 31.5986L52.3359 52.584L31.502 38.1592L21.8994 47.7617L50.9404 66.4404L21.8916 84.9033L31.4512 94.4629L52.4385 80.1865L38.0117 101.023L47.6143 110.626L66.1865 81.7471L84.7607 110.623L94.3633 101.021L79.9365 80.1836L100.924 94.4609L110.483 84.9014L81.4355 66.4404L110.476 47.7637L100.874 38.1611L80.0361 52.5889L94.3135 31.6006L84.7539 22.041L66.1875 51.2539L47.6211 22.0391L38.0615 31.5986ZM85.0889 107.56L91.8574 100.791L91.8604 100.795L85.0889 107.566L66.1875 78.1807L47.2861 107.567L40.5156 100.797L40.5186 100.793L47.2871 107.562L66.1875 78.1748L85.0889 107.56ZM59.9727 71.9922C60.2581 71.764 60.5158 71.7631 60.7441 71.9912C60.845 72.0922 60.8901 72.205 60.8818 72.3281C60.8881 72.2075 60.8423 72.0973 60.7432 71.998C60.5148 71.77 60.2581 71.7708 59.9727 71.999L55.8154 75.5557L31.6865 91.9678L24.959 85.2402L24.9629 85.2373L31.6875 91.9619L55.8154 75.5488L59.9727 71.9922ZM71.6328 71.9893C71.8612 71.761 72.1189 71.7611 72.4043 71.9893L76.5615 75.5459L100.689 91.96L107.413 85.2363L107.417 85.2383L100.689 91.9668L76.5615 75.5518L72.4033 71.9951C72.1179 71.7671 71.8612 71.7679 71.6328 71.9961C71.5584 72.0706 71.5131 72.151 71.498 72.2373C71.512 72.1486 71.5566 72.0655 71.6328 71.9893ZM54.5244 66.4443L54.5176 66.4482L24.957 47.4346L24.9609 47.4297L54.5244 66.4443ZM107.419 47.4355L77.8584 66.4473L77.8545 66.4443L107.415 47.4316L107.419 47.4355ZM66.3223 66.3291L66.3184 66.333L66.1865 66.2012L66.0547 66.333L66.0518 66.3301L66.1875 66.1943L66.3223 66.3291ZM56.9707 55.9551L60.5273 60.1123C60.6432 60.2572 60.6989 60.3951 60.6973 60.5254C60.697 60.397 60.6404 60.2607 60.5264 60.1182L56.9697 55.9609L40.5566 31.834L40.5596 31.8311L56.9707 55.9551ZM91.8193 31.8359L75.4062 55.9648L71.8496 60.1221C71.7638 60.2293 71.7089 60.3325 71.6875 60.4316C71.708 60.3306 71.762 60.2248 71.8496 60.1152L75.4062 55.958L91.8164 31.833L91.8193 31.8359Z" fill="white"/>
+        <path d="M494.008 132.954V72.0488H507.581V96.8459H512.54L522.459 72.0488H537.163L524.112 101.631L536.728 132.954H522.198L512.54 108.157H507.581V132.954H494.008Z" fill="white"/>
+        <path d="M441.84 132.954V72.0488H464.549C471.161 72.0488 476.266 73.644 479.862 76.8342C483.516 80.0245 485.344 84.5199 485.344 90.3204C485.344 94.2067 484.357 97.6 482.385 100.5C480.413 103.4 477.629 105.576 474.033 107.026C473.163 107.374 472.988 107.983 473.511 108.853L476.556 113.203L483.777 132.954H469.943L460.981 108.592H455.761V132.954H441.84ZM455.674 97.281H465.071C467.565 97.281 469.508 96.6719 470.9 95.4538C472.292 94.2357 472.988 92.5246 472.988 90.3204C472.988 88.1162 472.292 86.4051 470.9 85.1869C469.508 83.9688 467.565 83.3598 465.071 83.3598H455.674V97.281Z" fill="white"/>
+        <path d="M385.451 133.999C382.435 133.999 379.506 133.535 376.664 132.607C373.88 131.621 371.414 130.055 369.268 127.909C367.934 126.517 366.745 124.892 365.701 123.036C364.657 121.122 363.845 118.57 363.265 115.38C362.685 112.131 362.395 107.839 362.395 102.503C362.395 97.1661 362.685 92.9027 363.265 89.7124C363.845 86.4642 364.657 83.8829 365.701 81.9688C366.745 80.0546 367.934 78.4305 369.268 77.0964C371.414 74.9502 373.88 73.4131 376.664 72.485C379.506 71.4989 382.435 71.0059 385.451 71.0059C385.475 71.0059 412.688 71.0059 412.711 71.0059C415.702 71.0135 418.579 71.5065 421.342 72.485C424.184 73.4131 426.678 74.9502 428.825 77.0964C430.217 78.4305 431.406 80.0546 432.392 81.9688C433.436 83.8829 434.248 86.4642 434.828 89.7124C435.408 92.9027 435.698 97.1661 435.698 102.503C435.698 107.839 435.408 112.131 434.828 115.38C434.248 118.57 433.436 121.122 432.392 123.036C431.406 124.892 430.217 126.517 428.825 127.909C426.678 130.055 424.184 131.621 421.342 132.607C418.589 133.525 415.722 133.989 412.742 133.999C412.708 133.999 385.485 133.999 385.451 133.999ZM385.451 121.731C385.492 121.731 412.723 121.731 412.763 121.731C415.144 121.706 417.105 120.952 418.645 119.469C420.211 117.961 421.081 115.873 421.255 113.204C421.371 111.522 421.458 109.782 421.516 107.984C421.632 106.186 421.69 104.359 421.69 102.503C421.69 100.646 421.632 98.8192 421.516 97.0211C421.458 95.1649 421.371 93.4248 421.255 91.8006C421.081 89.1324 420.211 87.0442 418.645 85.5361C417.102 84.0501 415.136 83.2962 412.748 83.2744C412.713 83.2741 385.487 83.2739 385.451 83.2739C383.015 83.2739 381.014 84.028 379.448 85.5361C377.882 87.0442 377.012 89.1324 376.838 91.8006C376.722 93.4248 376.606 95.1649 376.49 97.0211C376.432 98.8192 376.403 100.646 376.403 102.503C376.403 104.359 376.432 106.186 376.49 107.984C376.606 109.782 376.722 111.522 376.838 113.204C377.012 115.873 377.882 117.961 379.448 119.469C381.014 120.977 383.015 121.731 385.451 121.731Z" fill="white"/>
+        <path d="M314.856 132.954L308.156 72.0488H320.598L323.47 98.151V107.548C323.47 108.186 323.673 108.505 324.079 108.505C324.543 108.505 324.833 108.302 324.949 107.896L330.256 88.5802H336.521L341.828 107.896C341.944 108.302 342.205 108.534 342.611 108.592C343.075 108.592 343.307 108.244 343.307 107.548V98.151L346.178 72.0488H358.621L351.921 132.954H339.74L334.171 111.463C334.055 110.999 333.794 110.767 333.388 110.767C332.982 110.767 332.721 110.999 332.605 111.463L327.037 132.954H314.856Z" fill="white"/>
+        <path d="M276.416 132.954V84.2299H262.93V72.0488H303.823V84.2299H290.337V132.954H276.416Z" fill="white"/>
+        <path d="M219.449 132.954V72.0488H256.862V84.2299H232.065V96.8459H255.383V108.157H232.065V120.773H256.862V132.954H219.449Z" fill="white"/>
+        <path d="M166.512 132.954V72.0488H177.823L196.877 105.46C197.167 105.866 197.486 105.982 197.834 105.808C198.24 105.634 198.385 105.344 198.269 104.938L196.964 97.281V72.0488H210.015V132.954H198.704L179.737 99.5432C179.505 99.0791 179.186 98.9341 178.78 99.1081C178.432 99.2821 178.287 99.6012 178.345 100.065L179.563 107.722V132.954H166.512Z" fill="white"/>
+        <path d="M355.861 60.9052V12.181H342.375V0H383.268V12.181H369.782V60.9052H355.861Z" fill="white"/>
+        <path d="M315.031 60.9052V0H328.952V48.7241H345.832V60.9052H315.031Z" fill="white"/>
+        <path d="M285.427 61.7752C281.309 61.7752 277.654 60.9632 274.464 59.339C271.274 57.6569 268.779 55.3367 266.981 52.3785C265.241 49.4202 264.371 45.9979 264.371 42.1116V0H278.292V42.3726C278.292 44.5188 278.93 46.2589 280.206 47.593C281.541 48.8692 283.281 49.5072 285.427 49.5072C287.457 49.5072 289.139 48.8692 290.473 47.593C291.865 46.2589 292.561 44.5188 292.561 42.3726V0H306.483L306.222 42.1116C306.222 45.9979 305.323 49.4202 303.524 52.3785C301.784 55.3367 299.348 57.6569 296.216 59.339C293.142 60.9632 289.545 61.7752 285.427 61.7752Z" fill="white"/>
+        <path d="M210.02 60.9052L224.811 0H243.952L258.744 60.9052H244.909L235.774 17.6625L235.165 12.181C235.107 11.659 234.846 11.398 234.382 11.398C233.918 11.398 233.657 11.659 233.599 12.181L232.989 17.6625L223.854 60.9052H210.02ZM225.42 46.81L227.943 35.499H240.733L243.343 46.81H225.42ZM215.675 11.311V0H226.116L224.376 11.311H215.675Z" fill="white"/>
+        <path d="M175.385 60.9052L162.16 0H175.907L183.39 41.1545L183.912 48.9852C183.97 49.5072 184.202 49.7682 184.608 49.7682C185.072 49.7682 185.333 49.5072 185.391 48.9852L186 41.1545L193.831 0H207.491L193.918 60.9052H175.385Z" fill="white"/>
       </svg>
-      <span class="brand-text">Vault Network</span>
     </a>
 
     <button class="menu-pill" id="menuBtn" aria-expanded="false" aria-controls="ovMenu">
@@ -893,111 +849,45 @@ footer{border-top:1px solid var(--line);padding:clamp(52px,8vh,96px) 0 40px;
 </main>
 
 <footer>
-  <div class="wrap">
-
-    <div class="f-top">
-      <div class="f-lead">
-        <div class="f-mark">
-          <svg viewBox="0 0 26 26" aria-hidden="true">
-            <g transform="rotate(-35 13 13)" fill="currentColor">
-              <rect x="3.5" y="6.5" width="19" height="5.5" rx="2.75"/>
-              <rect x="3.5" y="14" width="19" height="5.5" rx="2.75"/>
-            </g>
-          </svg>
-          <span>Vault Network</span>
-        </div>
-        <p class="f-say">
-          <b>The Network remains.</b>
-          <span>Collect, trade, unlock.</span>
-        </p>
-      </div>
-
-      <div class="f-card">
-        <p>Vault Network is onboarding select partner platforms ready to add sealed digital collectibles.</p>
-        <div class="f-field">
-          <label class="sr-only" for="fEmail">Work email</label>
-          <input id="fEmail" type="email" inputmode="email" autocomplete="email" placeholder="Your work email">
-          <button class="f-send" id="fSend" type="button">Request access</button>
-          <p class="f-note" id="fNote" role="status"></p>
-        </div>
-      </div>
-    </div>
-
-    <hr class="f-rule">
-
-    <nav class="f-cols" aria-label="Footer">
-      <div>
-        <h3>Vaults</h3>
-        <ul>
-          <li><a href="vaults.html">The register</a></li>
-          <li><a href="index.html#how">How it works</a></li>
-          <li><a href="index.html#origin">Origin</a></li>
-          <li><a href="wallet.html">Your vaults</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Platforms</h3>
-        <ul>
-          <li><a href="partners.html">For partners</a></li>
-          <li><a href="mailto:support@thevaultnetwork.world">Start an integration <span class="f-chip">Open</span></a></li>
-          <li><a href="partners.html">Unlock events</a></li>
-          <li><a href="checkout-demo.html">Checkout</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Company</h3>
-        <ul>
-          <li><a href="about.html">About</a></li>
-          <li><a href="faq.html">FAQ</a></li>
-          <li><a href="mailto:support@thevaultnetwork.world">Contact</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Legal</h3>
-        <ul>
-          <li><a href="privacy.html">Privacy policy</a></li>
-          <li><a href="terms.html">Terms of service</a></li>
-          <li><a href="terms.html">Cookies</a></li>
-        </ul>
-      </div>
-    </nav>
-
-    <hr class="f-rule">
-
-    <div class="f-bottom">
-      <div class="f-contact">
-        <a class="f-mail" href="mailto:support@thevaultnetwork.world">
-          <span class="f-mail-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="2.5" y="5" width="19" height="14"/><path d="m2.5 6.5 9.5 7 9.5-7"/>
-            </svg>
-          </span>
-          <span>
-            <b>Talk to us</b>
-            support@thevaultnetwork.world
-          </span>
+    <div class="wrap">
+      <div class="f-row">
+        <a class="f-brand" href="index.html" aria-label="Vault Network, home">
+        <svg class="f-logo" viewBox="0 0 538 134" fill="none" role="img" aria-label="Vault Network">
+          <path d="M46.5369 130.084C40.4491 130.084 34.5369 129.146 28.8002 127.27C23.1807 125.276 18.205 122.109 13.8733 117.77C11.1806 114.955 8.78053 111.671 6.6732 107.918C4.56587 104.048 2.92685 98.8876 1.75611 92.4371C0.585368 85.8693 0 77.1905 0 66.4006C0 55.6107 0.585368 46.9905 1.75611 40.5401C2.92685 33.9723 4.56587 28.7533 6.6732 24.883C8.78053 21.0127 11.1806 17.7288 13.8733 15.0313C18.205 10.6919 23.1807 7.58397 28.8002 5.70747C34.5369 3.71369 40.4491 2.7168 46.5369 2.7168C46.584 2.7168 85.4277 2.71686 85.4747 2.71698C91.5119 2.73227 97.3186 3.7291 102.895 5.70747C108.631 7.58397 113.666 10.6919 117.997 15.0313C120.807 17.7288 123.207 21.0127 125.197 24.883C127.305 28.7533 128.944 33.9723 130.114 40.5401C131.285 46.9905 131.871 55.6107 131.871 66.4006C131.871 77.1905 131.285 85.8693 130.114 92.4371C128.944 98.8876 127.305 104.048 125.197 107.918C123.207 111.671 120.807 114.955 117.997 117.77C113.666 122.109 108.631 125.276 102.895 127.27C97.3376 129.125 91.5514 130.064 85.5363 130.084C85.4688 130.084 46.6045 130.084 46.5369 130.084Z" fill="#FD480D"/>
+          <path d="M85.4746 2.71191C91.5118 2.7272 97.3184 3.72381 102.895 5.70215C108.631 7.57866 113.665 10.687 117.997 15.0264C120.807 17.7238 123.207 21.0077 125.197 24.8779C127.304 28.7481 128.944 33.9668 130.114 40.5342C131.285 46.9847 131.87 55.6056 131.87 66.3955C131.87 77.1852 131.285 85.8639 130.114 92.4316C128.944 98.8821 127.305 104.043 125.197 107.913C123.207 111.666 120.807 114.95 117.997 117.765C113.665 122.104 108.631 125.271 102.895 127.265C97.3375 129.12 91.5511 130.058 85.5361 130.079C85.4225 130.079 46.6584 130.079 46.5371 130.079C40.4493 130.079 34.5364 129.141 28.7998 127.265C23.1804 125.271 18.2047 122.104 13.873 117.765C11.1804 114.95 8.78017 111.666 6.67285 107.913C4.56552 104.043 2.9266 98.8821 1.75586 92.4316C0.585136 85.864 1.21693e-05 77.1852 0 66.3955C0 55.6056 0.585119 46.9847 1.75586 40.5342C2.92655 33.9668 4.56568 28.7481 6.67285 24.8779C8.78009 21.0078 11.1805 17.7238 13.873 15.0264C18.2047 10.6871 23.1804 7.57867 28.7998 5.70215C34.5364 3.70837 40.4493 2.71094 46.5371 2.71094C46.6483 2.71094 85.3873 2.7118 85.4746 2.71191ZM38.0615 31.5986L52.3359 52.584L31.502 38.1592L21.8994 47.7617L50.9404 66.4404L21.8916 84.9033L31.4512 94.4629L52.4385 80.1865L38.0117 101.023L47.6143 110.626L66.1865 81.7471L84.7607 110.623L94.3633 101.021L79.9365 80.1836L100.924 94.4609L110.483 84.9014L81.4355 66.4404L110.476 47.7637L100.874 38.1611L80.0361 52.5889L94.3135 31.6006L84.7539 22.041L66.1875 51.2539L47.6211 22.0391L38.0615 31.5986ZM85.0889 107.56L91.8574 100.791L91.8604 100.795L85.0889 107.566L66.1875 78.1807L47.2861 107.567L40.5156 100.797L40.5186 100.793L47.2871 107.562L66.1875 78.1748L85.0889 107.56ZM59.9727 71.9922C60.2581 71.764 60.5158 71.7631 60.7441 71.9912C60.845 72.0922 60.8901 72.205 60.8818 72.3281C60.8881 72.2075 60.8423 72.0973 60.7432 71.998C60.5148 71.77 60.2581 71.7708 59.9727 71.999L55.8154 75.5557L31.6865 91.9678L24.959 85.2402L24.9629 85.2373L31.6875 91.9619L55.8154 75.5488L59.9727 71.9922ZM71.6328 71.9893C71.8612 71.761 72.1189 71.7611 72.4043 71.9893L76.5615 75.5459L100.689 91.96L107.413 85.2363L107.417 85.2383L100.689 91.9668L76.5615 75.5518L72.4033 71.9951C72.1179 71.7671 71.8612 71.7679 71.6328 71.9961C71.5584 72.0706 71.5131 72.151 71.498 72.2373C71.512 72.1486 71.5566 72.0655 71.6328 71.9893ZM54.5244 66.4443L54.5176 66.4482L24.957 47.4346L24.9609 47.4297L54.5244 66.4443ZM107.419 47.4355L77.8584 66.4473L77.8545 66.4443L107.415 47.4316L107.419 47.4355ZM66.3223 66.3291L66.3184 66.333L66.1865 66.2012L66.0547 66.333L66.0518 66.3301L66.1875 66.1943L66.3223 66.3291ZM56.9707 55.9551L60.5273 60.1123C60.6432 60.2572 60.6989 60.3951 60.6973 60.5254C60.697 60.397 60.6404 60.2607 60.5264 60.1182L56.9697 55.9609L40.5566 31.834L40.5596 31.8311L56.9707 55.9551ZM91.8193 31.8359L75.4062 55.9648L71.8496 60.1221C71.7638 60.2293 71.7089 60.3325 71.6875 60.4316C71.708 60.3306 71.762 60.2248 71.8496 60.1152L75.4062 55.958L91.8164 31.833L91.8193 31.8359Z" fill="white"/>
+          <path d="M494.008 132.954V72.0488H507.581V96.8459H512.54L522.459 72.0488H537.163L524.112 101.631L536.728 132.954H522.198L512.54 108.157H507.581V132.954H494.008Z" fill="white"/>
+          <path d="M441.84 132.954V72.0488H464.549C471.161 72.0488 476.266 73.644 479.862 76.8342C483.516 80.0245 485.344 84.5199 485.344 90.3204C485.344 94.2067 484.357 97.6 482.385 100.5C480.413 103.4 477.629 105.576 474.033 107.026C473.163 107.374 472.988 107.983 473.511 108.853L476.556 113.203L483.777 132.954H469.943L460.981 108.592H455.761V132.954H441.84ZM455.674 97.281H465.071C467.565 97.281 469.508 96.6719 470.9 95.4538C472.292 94.2357 472.988 92.5246 472.988 90.3204C472.988 88.1162 472.292 86.4051 470.9 85.1869C469.508 83.9688 467.565 83.3598 465.071 83.3598H455.674V97.281Z" fill="white"/>
+          <path d="M385.451 133.999C382.435 133.999 379.506 133.535 376.664 132.607C373.88 131.621 371.414 130.055 369.268 127.909C367.934 126.517 366.745 124.892 365.701 123.036C364.657 121.122 363.845 118.57 363.265 115.38C362.685 112.131 362.395 107.839 362.395 102.503C362.395 97.1661 362.685 92.9027 363.265 89.7124C363.845 86.4642 364.657 83.8829 365.701 81.9688C366.745 80.0546 367.934 78.4305 369.268 77.0964C371.414 74.9502 373.88 73.4131 376.664 72.485C379.506 71.4989 382.435 71.0059 385.451 71.0059C385.475 71.0059 412.688 71.0059 412.711 71.0059C415.702 71.0135 418.579 71.5065 421.342 72.485C424.184 73.4131 426.678 74.9502 428.825 77.0964C430.217 78.4305 431.406 80.0546 432.392 81.9688C433.436 83.8829 434.248 86.4642 434.828 89.7124C435.408 92.9027 435.698 97.1661 435.698 102.503C435.698 107.839 435.408 112.131 434.828 115.38C434.248 118.57 433.436 121.122 432.392 123.036C431.406 124.892 430.217 126.517 428.825 127.909C426.678 130.055 424.184 131.621 421.342 132.607C418.589 133.525 415.722 133.989 412.742 133.999C412.708 133.999 385.485 133.999 385.451 133.999ZM385.451 121.731C385.492 121.731 412.723 121.731 412.763 121.731C415.144 121.706 417.105 120.952 418.645 119.469C420.211 117.961 421.081 115.873 421.255 113.204C421.371 111.522 421.458 109.782 421.516 107.984C421.632 106.186 421.69 104.359 421.69 102.503C421.69 100.646 421.632 98.8192 421.516 97.0211C421.458 95.1649 421.371 93.4248 421.255 91.8006C421.081 89.1324 420.211 87.0442 418.645 85.5361C417.102 84.0501 415.136 83.2962 412.748 83.2744C412.713 83.2741 385.487 83.2739 385.451 83.2739C383.015 83.2739 381.014 84.028 379.448 85.5361C377.882 87.0442 377.012 89.1324 376.838 91.8006C376.722 93.4248 376.606 95.1649 376.49 97.0211C376.432 98.8192 376.403 100.646 376.403 102.503C376.403 104.359 376.432 106.186 376.49 107.984C376.606 109.782 376.722 111.522 376.838 113.204C377.012 115.873 377.882 117.961 379.448 119.469C381.014 120.977 383.015 121.731 385.451 121.731Z" fill="white"/>
+          <path d="M314.856 132.954L308.156 72.0488H320.598L323.47 98.151V107.548C323.47 108.186 323.673 108.505 324.079 108.505C324.543 108.505 324.833 108.302 324.949 107.896L330.256 88.5802H336.521L341.828 107.896C341.944 108.302 342.205 108.534 342.611 108.592C343.075 108.592 343.307 108.244 343.307 107.548V98.151L346.178 72.0488H358.621L351.921 132.954H339.74L334.171 111.463C334.055 110.999 333.794 110.767 333.388 110.767C332.982 110.767 332.721 110.999 332.605 111.463L327.037 132.954H314.856Z" fill="white"/>
+          <path d="M276.416 132.954V84.2299H262.93V72.0488H303.823V84.2299H290.337V132.954H276.416Z" fill="white"/>
+          <path d="M219.449 132.954V72.0488H256.862V84.2299H232.065V96.8459H255.383V108.157H232.065V120.773H256.862V132.954H219.449Z" fill="white"/>
+          <path d="M166.512 132.954V72.0488H177.823L196.877 105.46C197.167 105.866 197.486 105.982 197.834 105.808C198.24 105.634 198.385 105.344 198.269 104.938L196.964 97.281V72.0488H210.015V132.954H198.704L179.737 99.5432C179.505 99.0791 179.186 98.9341 178.78 99.1081C178.432 99.2821 178.287 99.6012 178.345 100.065L179.563 107.722V132.954H166.512Z" fill="white"/>
+          <path d="M355.861 60.9052V12.181H342.375V0H383.268V12.181H369.782V60.9052H355.861Z" fill="white"/>
+          <path d="M315.031 60.9052V0H328.952V48.7241H345.832V60.9052H315.031Z" fill="white"/>
+          <path d="M285.427 61.7752C281.309 61.7752 277.654 60.9632 274.464 59.339C271.274 57.6569 268.779 55.3367 266.981 52.3785C265.241 49.4202 264.371 45.9979 264.371 42.1116V0H278.292V42.3726C278.292 44.5188 278.93 46.2589 280.206 47.593C281.541 48.8692 283.281 49.5072 285.427 49.5072C287.457 49.5072 289.139 48.8692 290.473 47.593C291.865 46.2589 292.561 44.5188 292.561 42.3726V0H306.483L306.222 42.1116C306.222 45.9979 305.323 49.4202 303.524 52.3785C301.784 55.3367 299.348 57.6569 296.216 59.339C293.142 60.9632 289.545 61.7752 285.427 61.7752Z" fill="white"/>
+          <path d="M210.02 60.9052L224.811 0H243.952L258.744 60.9052H244.909L235.774 17.6625L235.165 12.181C235.107 11.659 234.846 11.398 234.382 11.398C233.918 11.398 233.657 11.659 233.599 12.181L232.989 17.6625L223.854 60.9052H210.02ZM225.42 46.81L227.943 35.499H240.733L243.343 46.81H225.42ZM215.675 11.311V0H226.116L224.376 11.311H215.675Z" fill="white"/>
+          <path d="M175.385 60.9052L162.16 0H175.907L183.39 41.1545L183.912 48.9852C183.97 49.5072 184.202 49.7682 184.608 49.7682C185.072 49.7682 185.333 49.5072 185.391 48.9852L186 41.1545L193.831 0H207.491L193.918 60.9052H175.385Z" fill="white"/>
+        </svg>
         </a>
+        <nav class="f-menu" aria-label="Footer">
+          <a href="index.html#how">How it works</a>
+          <a href="vaults.html">Vaults</a>
+          <a href="partners.html">Partners</a>
+          <a href="about.html">About</a>
+          <a href="faq.html">FAQ</a>
+          <a href="checkout-demo.html">Checkout demo</a>
+        </nav>
       </div>
-
-      <div class="f-facts">
-        <div class="f-fact">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/><circle cx="12" cy="12" r="2.6"/><path d="M12 9.4V7M12 17v-2.4"/></svg>
-          <span><b>Serialised</b>on issue</span>
-        </div>
-        <div class="f-fact">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="5" y="10.5" width="14" height="9" rx="1.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>
-          <span><b>One unlock</b>per vault</span>
-        </div>
-        <div class="f-fact">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.2 2.3 3.4 5.3 3.4 8.5s-1.2 6.2-3.4 8.5c-2.2-2.3-3.4-5.3-3.4-8.5S9.8 5.8 12 3.5Z"/></svg>
-          <span><b>On chain</b>every transfer</span>
-        </div>
+      <hr class="f-rule">
+      <div class="f-legal">
+        <p>Softcursion O&Uuml;, registration number 17542975. Tallinn, Estonia. &copy; 2026 Softcursion O&Uuml;. All rights reserved.</p>
+        <nav aria-label="Legal">
+          <a href="terms.html">Terms of Service</a>
+          <a href="privacy.html">Privacy Policy</a>
+        </nav>
       </div>
     </div>
-
-    <p class="f-legal">Softcursion OU, registration number 17542975. Tallinn, Estonia. &copy; 2026 Softcursion OU. All rights reserved.</p>
-  </div>
-</footer>
+  </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>

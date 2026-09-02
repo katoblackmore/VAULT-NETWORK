@@ -131,8 +131,11 @@ both were removed: a button that moves away from the pointer reads as broken.
 Fixed bar, `z-index:50`, `pointer-events:none` on the bar with `auto` on its
 children so the hero underneath stays draggable.
 
-Left: wordmark (two rounded rects rotated −35°, 26×26 viewBox) and a `Menu`
-pill whose two bars cross into an X via a class swap. Right: `Your vaults`
+Left: the brand lockup — the client's SVG (viewBox `0 0 538 134`, a white tile
+with an orange asterisk and a two-line wordmark), **inlined** into the markup so
+a page opened on its own still shows it, at `height:36px` (30px under 420px).
+The bar's height comes from the 44px `Menu` pill, so the lockup never grows it.
+Then the `Menu` pill, whose two bars cross into an X via a class swap. Right: `Your vaults`
 (outline) and `Get a Vault` (solid). Both right-hand actions fade to
 `opacity:0;pointer-events:none` while the overlay is open.
 
@@ -600,34 +603,20 @@ Rules that were learned the hard way:
 
 ## 8. Footer
 
-Three tiers separated by `.f-rule` hairlines.
+One row, one rule, one line. `footer{border-top:1px solid var(--line);
+padding:clamp(40px,6vh,72px) 0 clamp(28px,4vh,44px)}`.
 
-**Top** — one centred column, `align-items:center;text-align:center`, gap
-`clamp(24px,4vh,42px)`: the wordmark; then the statement at display size, one
-sentence per line, second line in `--signal`:
+- **Row** — the lockup (inlined, `height:clamp(30px,2.6vw,38px)`) on the left; on
+  the right the main menu in a single line: How it works → `index.html#how`,
+  Vaults, Partners, About, FAQ, Checkout demo. Mono, 11px, `.16em` tracking,
+  uppercase, `--dim`, `--paper` on hover.
+- **Rule** — `.f-rule`.
+- **Legal** — *Softcursion OÜ, registration number 17542975. Tallinn, Estonia.
+  © 2026 Softcursion OÜ. All rights reserved.* on the left, 12.5px `--dim`;
+  Terms of Service and Privacy Policy on the right, same mono style as the menu.
 
-> **THE NETWORK REMAINS.**
-> **COLLECT, TRADE, UNLOCK.**
-
-then, centred and without a panel, the onboarding line, an email field and
-`Request access` on one line (`max-width:560px`, wrapping to a column under
-520px). The button is a pill filled with `--signal`.
-
-**Middle** — four link columns: Vaults, Platforms, Company, Legal.
-
-**Bottom** — a contact block (envelope icon, `Talk to us`,
-`support@thevaultnetwork.world`) on the left; three facts with icons on the
-right — Serialised / on issue, One unlock / per vault, On chain / every
-transfer. Then the legal line: *Softcursion OÜ, registration number 17542975.
-Tallinn, Estonia. © 2026 Softcursion OÜ. All rights reserved.*
-
-The form has no backend. On a valid address it opens a pre-filled `mailto:`; on
-an invalid one it writes into a `role="status"` element. Silently discarding what
-someone typed is worse than handing it to their mail client.
-
-Inputs: `font-size:16px` and `min-height:52px`, or iOS zooms on focus.
-
----
+Under 700px both rows stack. Nothing else: the statement block, the email
+form, the four link columns, the contact block and the facts row were removed.
 
 ## 9. Palette switcher
 
